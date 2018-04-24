@@ -15,9 +15,31 @@ Variables for 4G EPC:
 > mme_ip_address
 
 ## Build
+Different flavours, all equivalent, your choice:
 
+### using compose
 > docker-compose build --no-cache
+
+### no git clone
+> docker build -t oai:enb-master https://github.com/sofianinho/docker-openairinterface-enb.git#master
+
+### after git clone 
+> docker build -t oai:enb-master .
+
+_`NB:`_ currently the oai-enodeB docker build is done against the master branch of eurecom's openairinterface5g repo. If you want to select another branch, no need to modify the Dockerfile, just specify your branch as a build-arg to your docker build command. Example: If I wanted to build against develop:
+> docker build --build-arg OAI_BRANCH=develop -t oai:enb-master .
+
+This works if the dependencies in your branch are the same as the master. If you notice build fails, please report it in the issues with your command, the complete log, and the branch it happened.
 
 ## Run 
 
-> docker-compose up 
+Write a configuration file (./enb.conf) that matches the configuration of your EPC and IP interfaces. change the $PWD variable (if necessary), if you want to point to another path (I suppose you know what you are doind at this point :-) )
+
+> docker-compose up
+
+or:
+> docker run -it --privileged --net=host -v $PWD:/config -v /dev/bus/usb:/dev/bus/usb oai:enb-master
+
+## LICENSE
+
+Original work from @ravens, of which this repo is a fork and modification, was unlicensed. I added an MIT license.
