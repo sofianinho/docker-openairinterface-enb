@@ -9,19 +9,19 @@ RUN apt-get update \
   && apt-get -yq --no-install-recommends install \
    autoconf \
    build-essential \
-   libusb-1.0-0-dev \
    cmake \
-   wget \
-   pkg-config \
-   libboost-all-dev \
-   python \
-   python-dev \
-   python-cheetah \
    git \
-   subversion \
-   python-software-properties \
+   libboost-all-dev \
+   libusb-1.0-0-dev \
+   pkg-config \
+   python \
+   python-cheetah \
+   python-dev \
    python-mako \
    python-requests \
+   python-software-properties \
+   subversion \
+   wget \
   && apt-get -y autoclean
 
 # Fetching the uhd 3.010.001 driver for our USRP SDR card
@@ -36,19 +36,25 @@ RUN cd /tmp \
   && make install \
   && ldconfig \
   && python /usr/local/lib/uhd/utils/uhd_images_downloader.py \
-  && rm -rf /tmp/uhd*
-# TODO: remove other ursp frntend than the ones needed (usrp b200 and b210)
+  && rm -rf /tmp/uhd* \
+  && cd /usr/local/share/uhd/images \
+  && ls |grep -v "003.010.001.001.tag"|grep -v "bit" |grep -v "usrp_b200_fpga.bin"|grep -v "usrp_b200_fw.hex"|grep -v "usrp_b210_fpga.bin"|xargs rm
+# remove other ursp frntend than the ones needed (usrp b200 and b210)
 
 # Dependencies for OpenAirInterface software
 RUN apt-get -yq --no-install-recommends install \
   automake  \
    bison  \
+   check \
    cmake-curses-gui  \
+   ctags \
+   dialog \
+   dkms \
    doxygen \
    doxygen-gui \
-   texlive-latex-base \
    ethtool \
    flex  \
+   gawk \
    gccxml \
    gdb  \
    graphviz \
@@ -61,66 +67,63 @@ RUN apt-get -yq --no-install-recommends install \
    libatlas-base-dev \
    libatlas-dev \
    libblas-dev \
+   libboost-all-dev \
    libconfig8-dev \
+   libffi-dev \
    libforms-bin \
    libforms-dev \
    libgcrypt11-dev \
    libgmp-dev \
+   libgnutls-dev \
    libgtk-3-dev \
-   libidn2-0-dev  \
    libidn11-dev \
+   libidn2-0-dev  \
    libmysqlclient-dev  \
    liboctave-dev \
    libpgm-dev \
-   libsctp1  \
+   libpthread-stubs0-dev \
    libsctp-dev  \
+   libsctp1  \
    libssl-dev  \
    libtasn1-dev  \
    libtool  \
    libusb-1.0-0-dev \
    libxml2 \
    libxml2-dev  \
+   libxslt1-dev \
    mscgen  \
+   nettle-bin \
+   nettle-dev \
+   ntpdate \
    octave \
    octave-signal \
    openssh-client \
    openssh-server \
    openssl \
-   xmlstarlet \
-   python-pip \
-   pydb \
-   wvdial \
-   python-numpy \
-   sshpass \
-   libgnutls-dev \
-   nettle-dev \
-   nettle-bin \
-   check \
-   dialog \
-   dkms \
-   gawk \
-   libboost-all-dev \
-   libpthread-stubs0-dev \
    openvpn \
    pkg-config \
+   pydb \
    python-dev  \
+   python-numpy \
    python-pexpect \
+   python-pip \
+   python-setuptools\
    sshfs \
+   sshpass \
    swig  \
+   texlive-latex-base \
    tshark \
    uml-utilities \
    unzip  \
    valgrind  \
    vlan      \
-   ctags \
-   ntpdate \
-  libffi-dev \
-  libxslt1-dev \
-  && apt-get -y autoclean
-RUN apt-get install -qy python-setuptools && apt-get -y autoclean \
+   wvdial \
+   xmlstarlet \
+   && apt-get -y autoclean \
   && easy_install pip==10.0.1 \
-  && pip install paramiko==1.17.1 \
-  && pip install pyroute2 \
+  && pip install \
+    paramiko==1.17.1 \
+    pyroute2 \
   && update-alternatives --set liblapack.so /usr/lib/atlas-base/atlas/liblapack.so
 
 # ASN1 compiler with Eurecom fixes
