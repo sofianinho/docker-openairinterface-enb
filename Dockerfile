@@ -38,7 +38,7 @@ RUN cd /tmp \
   && python /usr/local/lib/uhd/utils/uhd_images_downloader.py \
   && rm -rf /tmp/uhd* \
   && cd /usr/local/share/uhd/images \
-  && ls |grep -v "003.010.001.001.tag"|grep -v "bit" |grep -v "usrp_b200_fpga.bin"|grep -v "usrp_b200_fw.hex"|grep -v "usrp_b210_fpga.bin"|xargs rm
+  && ls |grep -v "003.010.001.001.tag"|grep -v "bit" |grep -v "usrp_b200_fpga.bin"|grep -v "usrp_b200_fw.hex"|grep -v "usrp_b210_fpga.bin"|xargs rm -rf
 # remove other ursp frntend than the ones needed (usrp b200 and b210)
 
 # Dependencies for OpenAirInterface software
