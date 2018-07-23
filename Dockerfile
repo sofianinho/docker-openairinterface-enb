@@ -19,7 +19,7 @@ RUN apt-get update \
    python-cheetah \
    git \
    subversion \
-   python-software-properties \
+   software-properties-common \
    python-mako \
    python-requests \
   && apt-get -y autoclean
@@ -40,32 +40,35 @@ RUN cd /tmp \
 # TODO: remove other ursp frntend than the ones needed (usrp b200 and b210)
 
 # Dependencies for OpenAirInterface software
-RUN apt-get -yq --no-install-recommends install \
+# backports to xenial for certain packages
+RUN  apt-get -yq --no-install-recommends install \
   automake  \
+   apt-utils \
    bison  \
+   castxml \
+   ctags \
    cmake-curses-gui  \
+  curl \
    doxygen \
    doxygen-gui \
-   texlive-latex-base \
    ethtool \
    flex  \
-   gccxml \
    gdb  \
    graphviz \
    gtkwave \
    guile-2.0-dev  \
    iperf \
-   iproute \
+   iproute2 \
    iptables \
    iptables-dev \
    libatlas-base-dev \
-   libatlas-dev \
    libblas-dev \
-   libconfig8-dev \
+   libconfig-dev \
    libforms-bin \
    libforms-dev \
    libgcrypt11-dev \
    libgmp-dev \
+   libgnutls28-dev \
    libgtk-3-dev \
    libidn2-0-dev  \
    libidn11-dev \
@@ -92,7 +95,6 @@ RUN apt-get -yq --no-install-recommends install \
    wvdial \
    python-numpy \
    sshpass \
-   libgnutls-dev \
    nettle-dev \
    nettle-bin \
    check \
@@ -107,21 +109,23 @@ RUN apt-get -yq --no-install-recommends install \
    python-pexpect \
    sshfs \
    swig  \
+   texlive-latex-base \
    tshark \
    uml-utilities \
    unzip  \
    valgrind  \
    vlan      \
-   ctags \
    ntpdate \
   libffi-dev \
   libxslt1-dev \
   && apt-get -y autoclean
-RUN apt-get install -qy python-setuptools && apt-get -y autoclean \
-  && easy_install pip==10.0.1 \
+RUN curl -LO http://fr.archive.ubuntu.com/ubuntu/pool/universe/g/gccxml/gccxml_0.9.0+git20140716-6_amd64.deb \
+  && dpkg -i gccxml*.deb \
+  && rm gccxml*.deb
+RUN apt-get install -qy python-setuptools python-pip   && apt-get -y autoclean \
+  && pip install wheel \
   && pip install paramiko==1.17.1 \
-  && pip install pyroute2 \
-  && update-alternatives --set liblapack.so /usr/lib/atlas-base/atlas/liblapack.so
+  && pip install pyroute2 
 
 # ASN1 compiler with Eurecom fixes
 WORKDIR /root
